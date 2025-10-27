@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
+import CalculatorScript from '@/components/CalculatorScript'
 import { CalculatorData } from '@/types/calculator'
 import { getCategoryByName } from '@/lib/categories'
 import { getGeneratedCalculators, getCalculatorBySlug } from '@/lib/generated-calculators'
@@ -332,22 +333,12 @@ export default async function CalculatorPage({ params }: PageProps) {
       </main>
       <Footer />
 
-      {/* Inject Calculator JavaScript */}
+      {/* Inject Calculator JavaScript and Styles */}
       {calculator.calculator.logic && (
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              (function() {
-                ${calculator.calculator.logic}
-              })();
-            `,
-          }}
+        <CalculatorScript
+          logic={calculator.calculator.logic}
+          styles={calculator.calculator.styles}
         />
-      )}
-
-      {/* Inject Custom Styles if any */}
-      {calculator.calculator.styles && (
-        <style dangerouslySetInnerHTML={{ __html: calculator.calculator.styles }} />
       )}
 
       {/* JSON-LD Structured Data Schemas */}
