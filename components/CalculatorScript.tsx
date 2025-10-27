@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 
 interface CalculatorScriptProps {
   logic: string
@@ -8,13 +8,20 @@ interface CalculatorScriptProps {
 }
 
 export default function CalculatorScript({ logic, styles }: CalculatorScriptProps) {
+  const scriptRef = useRef<HTMLScriptElement | null>(null)
+
   useEffect(() => {
-    // Execute the calculator logic
+    // Execute the calculator logic by injecting a script tag
     if (logic) {
       try {
-        // Create a function from the logic string and execute it
-        const executeLogic = new Function(logic)
-        executeLogic()
+        // Create a script element
+        const script = document.createElement('script')
+        script.textContent = logic
+        script.type = 'text/javascript'
+
+        // Append to document head or body
+        document.body.appendChild(script)
+        scriptRef.current = script
       } catch (error) {
         console.error('Error executing calculator logic:', error)
       }
@@ -22,7 +29,10 @@ export default function CalculatorScript({ logic, styles }: CalculatorScriptProp
 
     // Cleanup function
     return () => {
-      // Remove any event listeners or cleanup if needed
+      // Remove the script when component unmounts
+      if (scriptRef.current && scriptRef.current.parentNode) {
+        scriptRef.current.parentNode.removeChild(scriptRef.current)
+      }
     }
   }, [logic])
 
