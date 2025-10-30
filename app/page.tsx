@@ -1,14 +1,15 @@
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import Link from 'next/link'
-import { getGeneratedCalculators } from '@/lib/generated-calculators'
+import { getGeneratedCalculators, getLatestCalculators } from '@/lib/generated-calculators'
 import { categories } from '@/lib/categories'
 
 export default async function Home() {
   const calculatorsData = await getGeneratedCalculators()
+  const latestCalculators = await getLatestCalculators(5)
   return (
     <>
-      <Header />
+      <Header latestCalculators={latestCalculators} />
 
       <main className="flex-1">
         {/* Hero Section */}

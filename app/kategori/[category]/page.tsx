@@ -3,7 +3,7 @@ import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
-import { getGeneratedCalculators } from '@/lib/generated-calculators'
+import { getGeneratedCalculators, getLatestCalculators } from '@/lib/generated-calculators'
 import { getCategoryBySlug, getAllCategorySlugs } from '@/lib/categories'
 import { keywordsConfig } from '@/scripts/keywords-config'
 
@@ -53,6 +53,7 @@ export default async function CategoryPage({ params }: PageProps) {
 
   // Get all generated calculators
   const calculatorsData = await getGeneratedCalculators()
+  const latestCalculators = await getLatestCalculators(5)
 
   // Filter calculators by category
   const categoryCalculators = Object.entries(calculatorsData).filter(([slug, calc]) => {
@@ -63,7 +64,7 @@ export default async function CategoryPage({ params }: PageProps) {
 
   return (
     <>
-      <Header />
+      <Header latestCalculators={latestCalculators} />
       <main className="flex-1">
         {/* Breadcrumbs */}
         <div className="bg-gray-50 border-b border-gray-200">

@@ -2,7 +2,7 @@ import { Metadata } from 'next'
 import Link from 'next/link'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
-import { getGeneratedCalculators } from '@/lib/generated-calculators'
+import { getGeneratedCalculators, getLatestCalculators } from '@/lib/generated-calculators'
 import { categories } from '@/lib/categories'
 
 export const metadata: Metadata = {
@@ -22,6 +22,7 @@ export const metadata: Metadata = {
 
 export default async function AllCalculatorsPage() {
   const calculatorsData = await getGeneratedCalculators()
+  const latestCalculators = await getLatestCalculators(5)
 
   // Group calculators by category
   const calculatorsByCategory: Record<string, Array<{ slug: string; data: any }>> = {}
@@ -36,7 +37,7 @@ export default async function AllCalculatorsPage() {
 
   return (
     <>
-      <Header />
+      <Header latestCalculators={latestCalculators} />
       <main className="flex-1">
         {/* Hero Section */}
         <div className="bg-white border-b border-gray-200">

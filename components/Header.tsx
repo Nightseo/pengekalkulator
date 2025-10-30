@@ -2,9 +2,16 @@
 
 import Link from 'next/link'
 import { useState } from 'react'
+import { categories } from '@/lib/categories'
 
-export default function Header() {
+interface HeaderProps {
+  latestCalculators?: Array<{ slug: string; title: string }>
+}
+
+export default function Header({ latestCalculators = [] }: HeaderProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [calculatorsDropdownOpen, setCalculatorsDropdownOpen] = useState(false)
+  const [categoriesDropdownOpen, setCategoriesDropdownOpen] = useState(false)
 
   return (
     <header className="border-b border-gray-200 bg-white sticky top-0 z-50 shadow-sm">
@@ -28,9 +35,73 @@ export default function Header() {
             <Link href="/" className="px-4 py-2 text-sm font-medium text-gray-700 hover:text-primary-600 hover:bg-gray-50 transition-all">
               Forside
             </Link>
-            <Link href="/#kalkulatorer" className="px-4 py-2 text-sm font-medium text-gray-700 hover:text-primary-600 hover:bg-gray-50 transition-all">
-              Kalkulatorer
-            </Link>
+
+            {/* Calculators Dropdown */}
+            <div
+              className="relative"
+              onMouseEnter={() => setCalculatorsDropdownOpen(true)}
+              onMouseLeave={() => setCalculatorsDropdownOpen(false)}
+            >
+              <button className="px-4 py-2 text-sm font-medium text-gray-700 hover:text-primary-600 hover:bg-gray-50 transition-all flex items-center">
+                Kalkulatorer
+                <svg className="w-4 h-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+
+              {calculatorsDropdownOpen && (
+                <div className="absolute left-0 mt-0 w-64 bg-white border border-gray-200 shadow-lg">
+                  {latestCalculators.slice(0, 5).map((calc) => (
+                    <Link
+                      key={calc.slug}
+                      href={`/beregn/${calc.slug}`}
+                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-primary-600 transition-all"
+                    >
+                      {calc.title}
+                    </Link>
+                  ))}
+                  {latestCalculators.length > 0 && (
+                    <div className="border-t border-gray-200">
+                      <Link
+                        href="/beregn"
+                        className="block px-4 py-2 text-sm text-primary-600 font-medium hover:bg-gray-50 transition-all"
+                      >
+                        Se alle kalkulatorer →
+                      </Link>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+
+            {/* Categories Dropdown */}
+            <div
+              className="relative"
+              onMouseEnter={() => setCategoriesDropdownOpen(true)}
+              onMouseLeave={() => setCategoriesDropdownOpen(false)}
+            >
+              <button className="px-4 py-2 text-sm font-medium text-gray-700 hover:text-primary-600 hover:bg-gray-50 transition-all flex items-center">
+                Kategorier
+                <svg className="w-4 h-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+
+              {categoriesDropdownOpen && (
+                <div className="absolute left-0 mt-0 w-64 bg-white border border-gray-200 shadow-lg">
+                  {Object.values(categories).map((category) => (
+                    <Link
+                      key={category.slug}
+                      href={`/kategori/${category.slug}`}
+                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-primary-600 transition-all"
+                    >
+                      {category.name}
+                    </Link>
+                  ))}
+                </div>
+              )}
+            </div>
+
             <Link href="/#features" className="px-4 py-2 text-sm font-medium text-gray-700 hover:text-primary-600 hover:bg-gray-50 transition-all">
               Fordele
             </Link>
@@ -69,12 +140,22 @@ export default function Header() {
                 Forside
               </Link>
               <Link
-                href="/#kalkulatorer"
+                href="/beregn"
                 onClick={() => setMobileMenuOpen(false)}
                 className="px-4 py-3 text-sm font-medium text-gray-700 hover:text-primary-600 hover:bg-gray-50 transition-all"
               >
                 Kalkulatorer
               </Link>
+              {Object.values(categories).map((category) => (
+                <Link
+                  key={category.slug}
+                  href={`/kategori/${category.slug}`}
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="px-6 py-2 text-xs text-gray-600 hover:text-primary-600 hover:bg-gray-50 transition-all"
+                >
+                  {category.name}
+                </Link>
+              ))}
               <Link
                 href="/#features"
                 onClick={() => setMobileMenuOpen(false)}

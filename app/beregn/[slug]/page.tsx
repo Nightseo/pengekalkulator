@@ -6,7 +6,7 @@ import Footer from '@/components/Footer'
 import CalculatorScript from '@/components/CalculatorScript'
 import { CalculatorData } from '@/types/calculator'
 import { getCategoryByName } from '@/lib/categories'
-import { getGeneratedCalculators, getCalculatorBySlug } from '@/lib/generated-calculators'
+import { getGeneratedCalculators, getCalculatorBySlug, getLatestCalculators } from '@/lib/generated-calculators'
 
 interface PageProps {
   params: { slug: string }
@@ -56,13 +56,14 @@ export default async function CalculatorPage({ params }: PageProps) {
 
   // Get all calculators for related section
   const calculators = await getGeneratedCalculators()
+  const latestCalculators = await getLatestCalculators(5)
 
   // Get category info for breadcrumbs
   const categoryInfo = getCategoryByName(calculator.metadata.category)
 
   return (
     <>
-      <Header />
+      <Header latestCalculators={latestCalculators} />
       <main className="flex-1">
         {/* Breadcrumbs */}
         <div className="bg-gray-50 border-b border-gray-200">
